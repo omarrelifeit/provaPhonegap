@@ -1,2 +1,2 @@
-/Applications/MAMP/htdocs/hello/platforms/android/bin/AndroidManifest.xml : \
-/Applications/MAMP/htdocs/hello/platforms/android/AndroidManifest.xml \
+/Users/omar/Documents/provaPhonegap/platforms/android/bin/AndroidManifest.xml : \
+/Users/omar/Documents/provaPhonegap/platforms/android/AndroidManifest.xml \
