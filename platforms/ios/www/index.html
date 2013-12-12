@@ -3,51 +3,151 @@
     <head>
         <title>My Page</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
-            <script type="text/javascript" src="cordova.js"></script>
             <link rel="stylesheet" href="http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.css" />
             
+            <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
             <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
             <script src="http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.js"></script>
+            
+            <script>
+                
+                var pictureSource;   // picture source
+                var destinationType; // sets the format of returned value
+                
+                document.addEventListener("deviceready",onDeviceReady,false);
+                
+                function onDeviceReady() {
+                    pictureSource=navigator.camera.PictureSourceType;
+                    destinationType=navigator.camera.DestinationType;
+                }
+            
+                console.log('librerie caricate!');
+            
+                function onPhotoURISuccess(imageURI) {
+                    // Uncomment to view the image file URI
+                    console.log("imageURI: ", imageURI);
+                    
+                    var largeImage = document.getElementById('largeImage');
+                    
+                    // Unhide image elements
+                    
+                    largeImage.style.display = 'block';
+                
+                    // Show the captured photo
+                    // The in-line CSS rules are used to resize the image
+                    //
+                    largeImage.src = imageURI;
+                
+                }
+            
+                // Called when a photo is successfully retrieved
+                //
+                function onPhotoDataSuccess(imageData) {
+                    // Uncomment to view the base64-encoded image data
+                    console.log("dentro onPhotoDataSuccess");
+                     //console.log(imageData);
+                     
+                     var largeImage = document.getElementById('largeImage');
+                
+                    // Unhide image elements
+                    //
+                    largeImage.style.display = 'block';
+                
+                    // Show the captured photo
+                    // The in-line CSS rules are used to resize the image
+                    //
+                    largeImage.src = "data:image/jpeg;base64," + imageData;
+                }
+            
+                function onFail(){
+                    console.log("failed!");
+                }
+            
+                function getPhoto(source) {
+                    // Retrieve image file location from specified source
+                    
+                    navigator.camera.getPicture(onPhotoURISuccess, onFail, { quality: 50, destinationType: destinationType.FILE_URI, sourceType: source });
+                }
+            
+                function capturePhoto() {
+                    // Take picture using device camera and retrieve image as base64-encoded string
+                    navigator.camera.getPicture(onPhotoDataSuccess, onFail, { quality: 50, destinationType: destinationType.DATA_URL });
+                }
+            
+                function var_dump(obj, indentSpaces) {
+                    switch (typeof obj) {
+                        case "object":
+                        console.log(indent(indentSpaces) + typeof obj + ":");
+                        indentSpaces += 2; // indent further as we are entering the objects properties
+                        for (var i in obj) {
+                            console.log(indent(indentSpaces) + i + ":");
+                            var_dump(obj[i], indentSpaces + 1);
+                        }
+                        break;
+                        default: // things that are not objects, primatives... etc...
+                        console.log(indent(indentSpaces) + typeof obj + ":" + obj);
+                        break;
+                    }
+                }
+            
+                // just for styling with indents
+                function indent(spaces) {
+                    var i = 0;
+                    var rtr = "";
+                    while(i <= (spaces * 2)) {
+                        rtr += " ";
+                        i++;
+                    }
+                    return rtr;
+                }
+            
+                
+                $(document).on('click', '#buttonFoto', function () {
+                               getPhoto(pictureSource.SAVEDPHOTOALBUM);
+                               });
+                
+                $(document).on('click', '#buttonScattaFoto', function () {
+                               capturePhoto();
+                               });
+            
+            </script>
+            
     </head>
     <body>
         <div data-role="page" id="identificativo_pagina1">
             
-            <div data-role="header" data-position="fixed" data-id="headerPersistente">
+            <div data-role="header">
                 <h1>Mia App Phonegap</h1>
             </div><!-- /header -->
             
             <div data-role="content">
                 <a href="#identificativo_pagina2" data-role="button" data-theme="b">Inserimento dati personali</a>
                 <a href="#identificativo_pagina3" data-role="button" data-theme="b">Contatti</a>
+                
             </div><!-- /content -->
-            
-            <div data-role="footer" data-position="fixed" data-id="footerPersistente">
-                <h4>My Footer</h4>
-            </div><!-- /footer -->
             
         </div><!-- /page -->
         
         <div data-role="page" id="identificativo_pagina2">
             
-            <div data-role="header" data-position="fixed" data-id="headerPersistente">
+            <div data-role="header">
                 <h1>Mia App Phonegap</h1>
                  <a href="index.html" data-rel="back">back</a>
             </div><!-- /header -->
             
             <div data-role="content">
-                <a href="#" data-role="button" data-theme="b">Prova bottone</a>
+                <a href="#" data-role="button" data-theme="b" id="buttonScattaFoto">Scatta foto</a>
+                <a href="#" data-role="button" data-theme="b" id="buttonFoto">Scegli foto</a>
+                <img style="display:none; width:256px;height:256px;" id="largeImage" src="" />
             </div><!-- /content -->
-            
-            <div data-role="footer" data-position="fixed" data-id="footerPersistente">
-                <h4>My Footer</h4>
-            </div><!-- /footer -->
             
         </div><!-- /page -->
         
         <div data-role="page" id="identificativo_pagina3">
             
-            <div data-role="header" data-position="fixed" data-id="headerPersistente">
+            <div data-role="header">
                 <h1>Mia App Phonegap</h1>
+                
                 <a href="index.html" data-rel="back">back</a>
             </div><!-- /header -->
             
@@ -55,10 +155,7 @@
                 <p>Pagina Contatti</p>
             </div><!-- /content -->
             
-            <div data-role="footer" data-position="fixed" data-id="footerPersistente">
-                <h4>My Footer</h4>
-            </div><!-- /footer -->
-            
         </div><!-- /page -->
+ 
     </body>
 </html>
