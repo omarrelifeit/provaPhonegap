@@ -11,95 +11,96 @@
             
             <script>
                 
-                var pictureSource;   // picture source
-                var destinationType; // sets the format of returned value
+            var pictureSource;   // picture source
+            var destinationType; // sets the format of returned value
                 
-                document.addEventListener("deviceready",onDeviceReady,false);
+            document.addEventListener("deviceready",onDeviceReady,false);
                 
-                function onDeviceReady() {
-                    pictureSource=navigator.camera.PictureSourceType;
-                    destinationType=navigator.camera.DestinationType;
-                }
+            function onDeviceReady() {
+                pictureSource=navigator.camera.PictureSourceType;
+                destinationType=navigator.camera.DestinationType;
+                var_dump(value);
+            }
             
-                console.log('librerie caricate!');
+            console.log('librerie caricate!');
             
-                function onPhotoURISuccess(imageURI) {
-                    // Uncomment to view the image file URI
-                    console.log("imageURI: ", imageURI);
-                    
-                    var largeImage = document.getElementById('largeImage');
-                    
-                    // Unhide image elements
-                    
-                    largeImage.style.display = 'block';
+            function onPhotoURISuccess(imageURI) {
+                // Uncomment to view the image file URI
+                console.log("imageURI: ", imageURI);
                 
-                    // Show the captured photo
-                    // The in-line CSS rules are used to resize the image
-                    //
-                    largeImage.src = imageURI;
+                var largeImage = document.getElementById('largeImage');
                 
-                }
-            
-                // Called when a photo is successfully retrieved
+                // Unhide image elements
+                
+                largeImage.style.display = 'block';
+                
+                // Show the captured photo
+                // The in-line CSS rules are used to resize the image
                 //
-                function onPhotoDataSuccess(imageData) {
-                    // Uncomment to view the base64-encoded image data
-                    console.log("dentro onPhotoDataSuccess");
-                     //console.log(imageData);
-                     
-                     var largeImage = document.getElementById('largeImage');
+                largeImage.src = imageURI;
                 
-                    // Unhide image elements
-                    //
-                    largeImage.style.display = 'block';
+            }
+            
+            // Called when a photo is successfully retrieved
+            //
+            function onPhotoDataSuccess(imageData) {
+                // Uncomment to view the base64-encoded image data
+                console.log("dentro onPhotoDataSuccess");
+                //console.log(imageData);
                 
-                    // Show the captured photo
-                    // The in-line CSS rules are used to resize the image
-                    //
-                    largeImage.src = "data:image/jpeg;base64," + imageData;
-                }
+                var largeImage = document.getElementById('largeImage');
+                
+                // Unhide image elements
+                //
+                largeImage.style.display = 'block';
+                
+                // Show the captured photo
+                // The in-line CSS rules are used to resize the image
+                //
+                largeImage.src = "data:image/jpeg;base64," + imageData;
+            }
             
-                function onFail(){
-                    console.log("failed!");
-                }
+            function onFail(){
+                console.log("failed!");
+            }
             
-                function getPhoto(source) {
-                    // Retrieve image file location from specified source
-                    
-                    navigator.camera.getPicture(onPhotoURISuccess, onFail, { quality: 50, destinationType: destinationType.FILE_URI, sourceType: source });
-                }
+            function getPhoto(source) {
+                // Retrieve image file location from specified source
+                
+                navigator.camera.getPicture(onPhotoURISuccess, onFail, { quality: 50, destinationType: destinationType.FILE_URI, sourceType: source });
+            }
             
-                function capturePhoto() {
-                    // Take picture using device camera and retrieve image as base64-encoded string
-                    navigator.camera.getPicture(onPhotoDataSuccess, onFail, { quality: 50, destinationType: destinationType.DATA_URL });
-                }
+            function capturePhoto() {
+                // Take picture using device camera and retrieve image as base64-encoded string
+                navigator.camera.getPicture(onPhotoDataSuccess, onFail, { quality: 50, destinationType: destinationType.DATA_URL });
+            }
             
-                function var_dump(obj, indentSpaces) {
-                    switch (typeof obj) {
-                        case "object":
-                        console.log(indent(indentSpaces) + typeof obj + ":");
-                        indentSpaces += 2; // indent further as we are entering the objects properties
-                        for (var i in obj) {
-                            console.log(indent(indentSpaces) + i + ":");
-                            var_dump(obj[i], indentSpaces + 1);
-                        }
-                        break;
-                        default: // things that are not objects, primatives... etc...
-                        console.log(indent(indentSpaces) + typeof obj + ":" + obj);
-                        break;
+            function var_dump(obj, indentSpaces) {
+                switch (typeof obj) {
+                    case "object":
+                    console.log(indent(indentSpaces) + typeof obj + ":");
+                    indentSpaces += 2; // indent further as we are entering the objects properties
+                    for (var i in obj) {
+                        console.log(indent(indentSpaces) + i + ":");
+                        var_dump(obj[i], indentSpaces + 1);
                     }
+                    break;
+                    default: // things that are not objects, primatives... etc...
+                    console.log(indent(indentSpaces) + typeof obj + ":" + obj);
+                    break;
                 }
+            }
             
-                // just for styling with indents
-                function indent(spaces) {
-                    var i = 0;
-                    var rtr = "";
-                    while(i <= (spaces * 2)) {
-                        rtr += " ";
-                        i++;
-                    }
-                    return rtr;
+            // just for styling with indents
+            function indent(spaces) {
+                var i = 0;
+                var rtr = "";
+                while(i <= (spaces * 2)) {
+                    rtr += " ";
+                    i++;
                 }
+                return rtr;
+            }
             
             
             // Show a custom alertDismissed
@@ -133,15 +134,23 @@
                                     if(txtTelefono){
                                         var patternTEL = /^[+]*[0-9]+$/;
                                         if (patternTEL.test(txtTelefono)){
+                                            //Store the data
+                                            window.localStorage.setItem("save_name", txtNome);
+                                            window.localStorage.setItem("save_cognome", txtCognome);
+                                            window.localStorage.setItem("save_cf", txtCodiceFiscale);
+                                            window.localStorage.setItem("save_telefono", txtTelefono);
+                                            
+                                            $.mobile.changePage( "#documenti");
+                                            
                                             showAlert("TUTTO GIUSTO! BRAVO!");
                                         }else{
-                                           showAlert("Campo telefono errato!");
+                                            showAlert("Campo telefono errato!");
                                         }
                                     }else{
                                         showAlert("Campo telefono errato!");
                                     }
                                 }else{
-                                   showAlert("I codici fiscali non coincidono!");
+                                    showAlert("I codici fiscali non coincidono!");
                                 }
                             }else{
                                 showAlert("Campo codice fiscale errato!");
@@ -161,18 +170,35 @@
                 
             }
             
-                $(document).on('click', '#buttonFoto', function () {
-                               getPhoto(pictureSource.PHOTOLIBRARY);
-                               });
-                
-                $(document).on('click', '#buttonScattaFoto', function () {
-                               capturePhoto();
-                               });
-                               
-                $(document).on('click', '#confermaInfoPersonali', function () {
-                               convalida();
-                               });
-            
+            $(document).on('click', '#buttonFoto', function () {
+                           getPhoto(pictureSource.PHOTOLIBRARY);
+                           });
+                           
+                           $(document).on('click', '#buttonScattaFoto', function () {
+                                          capturePhoto();
+                                          });
+                                          
+                                          $(document).on('click', '#confermaInfoPersonali', function () {
+                                                         convalida();
+                                                         });
+                                                         
+                                                         /*$(document).on("pageinit","#documenti",function(){
+                                                          $("li").on("click",function(){
+                                                          //console.log("dentro li");
+                                                          //console.log($(this).id);
+                                                          //$(this).hide();
+                                                          
+                                                          var list = document.getElementById('listDocumenti');
+                                                          console.log("prima");
+                                                          var_dump(list.selectedIndex);
+                                                          console.log("dopo");
+                                                          
+                                                          });
+                                                          });*/
+            function cicicoco(id)
+            {
+                console.log(id);
+            }
             </script>
             
     </head>
@@ -206,19 +232,19 @@
                 
                 <div data-role="fieldcontain">
                     <label for="nome">Nome</label>
-                    <input type="text" name="nome" id="nome" />
+                    <input type="text" name="nome" id="nome" value="omar"/>
                 
                     <label for="cognome">Cognome</label>
-                    <input type="text" name="cognome" id="cognome" />
+                    <input type="text" name="cognome" id="cognome" value="omar" />
                 
                     <label for="cf">Codice Fiscale</label>
-                    <input type="text" name="cf" id="cf" />
+                    <input type="text" name="cf" id="cf" value="QTTMRO85E31G888F" />
                     
                     <label for="cf2">Conferma Codice Fiscale</label>
-                    <input type="text" name="cf2" id="cf2" />
+                    <input type="text" name="cf2" id="cf2" value="QTTMRO85E31G888F" />
                 
                     <label for="telefono">Telefono</label>
-                    <input type="tel" name="telefono" id="telefono" />
+                    <input type="tel" name="telefono" id="telefono" value="123" />
                 </div>
                 
                 <a href="#" data-role="button" data-theme="b" id="confermaInfoPersonali">AVANTI</a>
@@ -227,8 +253,28 @@
             
         </div><!-- /page -->
 
-        
-        
+    <!-- pagina DOCUMENTI -->
+
+    <div data-role="page" id="documenti">
+    
+        <div data-role="header">
+            <h1>Documenti</h1>
+            <a href="index.html" data-rel="back">back</a>
+        </div><!-- /header -->
+    
+        <div data-role="content">
+            
+            <ul data-role="listview" data-inset="true" id="listDocumenti">
+                <li id="cartaIdentita" onclick="cicicoco('cartaIdentita');"><a href="#identificativo_pagina2">Carta d'identit&agrave;<img src="../_assets/img/logo.png" class="ui-li-icon"></a></li>
+                <li id="ultimaBustaPaga" onclick="cicicoco('ultimaBustaPaga');"><a href="#">Ultima busta paga<img src="../_assets/img/logo.png" class="ui-li-icon"></a></li>
+                <li id="penultimaBustaPaga" onclick="cicicoco('penultimaBustaPaga');"><a href="#">Penultima busta paga<img src="../_assets/img/logo.png" class="ui-li-icon"></a></li>
+            </ul>
+            
+            <a href="#" data-role="button" data-theme="b" id="inviaDati">INVIA DATI</a>
+        </div><!-- /content -->
+    
+    </div><!-- /page -->
+
         <div data-role="page" id="identificativo_pagina2">
             
             <div data-role="header">
