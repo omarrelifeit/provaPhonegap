@@ -101,19 +101,54 @@
                     return rtr;
                 }
             
+            function convalida(){
                 
+                console.log("dentro convalida");
+                
+                var txtNome = document.getElementById('nome').value;
+                
+                if(!txtNome)
+                {
+                    
+                }
+                
+                
+                var txtCognome = document.getElementById('cognome').value;
+                var txtCodiceFiscale = document.getElementById('cf').value;
+                var txtTelefono = document.getElementById('telefono').value;
+
+                var patternCF = /^[A-Z]{6}[A-Z0-9]{2}[A-Z][A-Z0-9]{2}[A-Z][A-Z0-9]{3}[A-Z]$/;
+                var patternTEL = /^[+]*[0-9]+$/;
+                
+                //testo se il codice fiscale rispetta il pattern
+                var x = patternCF.test(txtCodiceFiscale);
+                var y = patternTEL.test(txtTelefono);
+                
+                //var_dump (y);
+                
+                if (txtNome){
+                    console.log("nome c'è!!");
+                }
+                
+            }
+            
                 $(document).on('click', '#buttonFoto', function () {
-                               getPhoto(pictureSource.SAVEDPHOTOALBUM);
+                               getPhoto(pictureSource.PHOTOLIBRARY);
                                });
                 
                 $(document).on('click', '#buttonScattaFoto', function () {
                                capturePhoto();
+                               });
+                               
+                $(document).on('click', '#confermaInfoPersonali', function () {
+                               convalida();
                                });
             
             </script>
             
     </head>
     <body>
+        <!-- pagina HOME -->
         <div data-role="page" id="identificativo_pagina1">
             
             <div data-role="header">
@@ -121,12 +156,46 @@
             </div><!-- /header -->
             
             <div data-role="content">
-                <a href="#identificativo_pagina2" data-role="button" data-theme="b">Inserimento dati personali</a>
+                <a href="#dati_personali" data-role="button" data-theme="b">Inserimento dati personali</a>
                 <a href="#identificativo_pagina3" data-role="button" data-theme="b">Contatti</a>
                 
             </div><!-- /content -->
             
         </div><!-- /page -->
+        
+        
+        <!-- pagina DATI PERSONALI -->
+        
+        <div data-role="page" id="dati_personali">
+            
+            <div data-role="header">
+                <h1>Mia App Phonegap</h1>
+                <a href="index.html" data-rel="back">back</a>
+            </div><!-- /header -->
+            
+            <div data-role="content">
+                
+                <div data-role="fieldcontain">
+                    <label for="nome">Nome</label>
+                    <input type="text" name="nome" id="nome" />
+                
+                    <label for="cognome">Cognome</label>
+                    <input type="text" name="cognome" id="cognome" />
+                
+                    <label for="cf">Codice Fiscale</label>
+                    <input type="text" name="cf" id="cf" required pattern="/ˆ[A-Z][0-9]{16}$/" />
+                
+                    <label for="telefono">Telefono</label>
+                    <input type="tel" name="telefono" id="telefono" />
+                </div>
+                
+                <a href="#" data-role="button" data-theme="b" id="confermaInfoPersonali">AVANTI</a>
+                
+            </div><!-- /content -->
+            
+        </div><!-- /page -->
+
+        
         
         <div data-role="page" id="identificativo_pagina2">
             
