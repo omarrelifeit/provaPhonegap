@@ -101,13 +101,76 @@
                     return rtr;
                 }
             
+            
+            // Show a custom alertDismissed
+            //
+            function showAlert(messaggio) {
+                navigator.notification.alert(
+                                             messaggio,             // message
+                                             function(){},          // callback
+                                             'Errore inserimento',  // title
+                                             'Ok'                   // buttonName
+                                             );
+            }
+            
+            
+            function convalida(){
                 
+                //console.log("dentro convalida");
+                
+                var txtNome = document.getElementById('nome').value;
+                
+                if(txtNome){
+                    var txtCognome = document.getElementById('cognome').value;
+                    if (txtCognome){
+                        var txtCodiceFiscale = document.getElementById('cf').value;
+                        if (txtCodiceFiscale){
+                            var patternCF = /^[A-Z]{6}[A-Z0-9]{2}[A-Z][A-Z0-9]{2}[A-Z][A-Z0-9]{3}[A-Z]$/;
+                            if(patternCF.test(txtCodiceFiscale)){
+                                var txtCodiceFiscale2 = document.getElementById('cf2').value;
+                                if (txtCodiceFiscale == txtCodiceFiscale2){
+                                    var txtTelefono = document.getElementById('telefono').value;
+                                    if(txtTelefono){
+                                        var patternTEL = /^[+]*[0-9]+$/;
+                                        if (patternTEL.test(txtTelefono)){
+                                            showAlert("TUTTO GIUSTO! BRAVO!");
+                                        }else{
+                                           showAlert("Campo telefono errato!");
+                                        }
+                                    }else{
+                                        showAlert("Campo telefono errato!");
+                                    }
+                                }else{
+                                   showAlert("I codici fiscali non coincidono!");
+                                }
+                            }else{
+                                showAlert("Campo codice fiscale errato!");
+                            }
+                        }else{
+                            showAlert("Campo codice fiscale mancante!");
+                        }
+                        
+                    }else{
+                        showAlert("Campo cognome mancante!");
+                    }
+                    
+                }
+                else{
+                    showAlert("Campo nome mancante!");
+                }
+                
+            }
+            
                 $(document).on('click', '#buttonFoto', function () {
-                               getPhoto(pictureSource.SAVEDPHOTOALBUM);
+                               getPhoto(pictureSource.PHOTOLIBRARY);
                                });
                 
                 $(document).on('click', '#buttonScattaFoto', function () {
                                capturePhoto();
+                               });
+                               
+                $(document).on('click', '#confermaInfoPersonali', function () {
+                               convalida();
                                });
             
             </script>
@@ -122,7 +185,7 @@
             </div><!-- /header -->
             
             <div data-role="content">
-                <a href="#identificativo_pagina2" data-role="button" data-theme="b">Inserimento dati personali</a>
+                <a href="#dati_personali" data-role="button" data-theme="b">Inserimento dati personali</a>
                 <a href="#identificativo_pagina3" data-role="button" data-theme="b">Contatti</a>
                 
             </div><!-- /content -->
@@ -136,11 +199,29 @@
             
             <div data-role="header">
                 <h1>Mia App Phonegap</h1>
+                <a href="index.html" data-rel="back">back</a>
             </div><!-- /header -->
             
             <div data-role="content">
                 
-                <a href="#identificativo_pagina3" data-role="button" data-theme="b">AVANTI</a>
+                <div data-role="fieldcontain">
+                    <label for="nome">Nome</label>
+                    <input type="text" name="nome" id="nome" />
+                
+                    <label for="cognome">Cognome</label>
+                    <input type="text" name="cognome" id="cognome" />
+                
+                    <label for="cf">Codice Fiscale</label>
+                    <input type="text" name="cf" id="cf" />
+                    
+                    <label for="cf2">Conferma Codice Fiscale</label>
+                    <input type="text" name="cf2" id="cf2" />
+                
+                    <label for="telefono">Telefono</label>
+                    <input type="tel" name="telefono" id="telefono" />
+                </div>
+                
+                <a href="#" data-role="button" data-theme="b" id="confermaInfoPersonali">AVANTI</a>
                 
             </div><!-- /content -->
             

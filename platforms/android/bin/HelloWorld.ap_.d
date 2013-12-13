@@ -30,6 +30,7 @@
 /Users/omar/Documents/provaPhonegap/platforms/android/assets/www/js/index.js \
 /Users/omar/Documents/provaPhonegap/platforms/android/assets/www/plugins/org.apache.cordova.camera \
 /Users/omar/Documents/provaPhonegap/platforms/android/assets/www/plugins/org.apache.cordova.console \
+/Users/omar/Documents/provaPhonegap/platforms/android/assets/www/plugins/org.apache.cordova.dialogs \
 /Users/omar/Documents/provaPhonegap/platforms/android/assets/www/plugins/org.apache.cordova.file \
 /Users/omar/Documents/provaPhonegap/platforms/android/assets/www/plugins/org.apache.cordova.media \
 /Users/omar/Documents/provaPhonegap/platforms/android/assets/www/plugins/org.apache.cordova.media-capture \
@@ -43,6 +44,10 @@
 /Users/omar/Documents/provaPhonegap/platforms/android/assets/www/plugins/org.apache.cordova.console/www \
 /Users/omar/Documents/provaPhonegap/platforms/android/assets/www/plugins/org.apache.cordova.console/www/console-via-logger.js \
 /Users/omar/Documents/provaPhonegap/platforms/android/assets/www/plugins/org.apache.cordova.console/www/logger.js \
+/Users/omar/Documents/provaPhonegap/platforms/android/assets/www/plugins/org.apache.cordova.dialogs/www \
+/Users/omar/Documents/provaPhonegap/platforms/android/assets/www/plugins/org.apache.cordova.dialogs/www/android \
+/Users/omar/Documents/provaPhonegap/platforms/android/assets/www/plugins/org.apache.cordova.dialogs/www/notification.js \
+/Users/omar/Documents/provaPhonegap/platforms/android/assets/www/plugins/org.apache.cordova.dialogs/www/android/notification.js \
 /Users/omar/Documents/provaPhonegap/platforms/android/assets/www/plugins/org.apache.cordova.file/www \
 /Users/omar/Documents/provaPhonegap/platforms/android/assets/www/plugins/org.apache.cordova.file/www/DirectoryEntry.js \
 /Users/omar/Documents/provaPhonegap/platforms/android/assets/www/plugins/org.apache.cordova.file/www/DirectoryReader.js \
