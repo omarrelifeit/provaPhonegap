@@ -13,16 +13,19 @@
                 
             var pictureSource;   // picture source
             var destinationType; // sets the format of returned value
+            var tipoDocumentoSelezionato = null;
+            var listaCreata = false;
+            var contatoreListaImmagini = 0;
+            //credo un array associativo TIPO DOCUMENTO - NUM FOTO CARICATE
+            var arrayAssociativoDocumenti = { "cartaIdentita":"0", "ultimaBustaPaga":"0", "penultimaBustaPaga":"0" };
                 
             document.addEventListener("deviceready",onDeviceReady,false);
                 
             function onDeviceReady() {
                 pictureSource=navigator.camera.PictureSourceType;
                 destinationType=navigator.camera.DestinationType;
-                var_dump(value);
             }
-            
-            console.log('librerie caricate!');
+
             
             function onPhotoURISuccess(imageURI) {
                 // Uncomment to view the image file URI
@@ -48,16 +51,17 @@
                 console.log("dentro onPhotoDataSuccess");
                 //console.log(imageData);
                 
-                var largeImage = document.getElementById('largeImage');
+                $("#listSingoloDocumento").append('<li>'  +
+                                                  '<img style=display:"block"; width:256px;height:256px; id=imageLista'+contatoreListaImmagini+' src="" />' +
+                                                  '</li>');
+                $("#listSingoloDocumento").listview("refresh");
+                                                  
+                var image = document.getElementById('imageLista'+contatoreListaImmagini);
+                image.src = "data:image/jpeg;base64," + imageData;
                 
-                // Unhide image elements
-                //
-                largeImage.style.display = 'block';
+                contatoreListaImmagini++;
+                console.log(contatoreListaImmagini);
                 
-                // Show the captured photo
-                // The in-line CSS rules are used to resize the image
-                //
-                largeImage.src = "data:image/jpeg;base64," + imageData;
             }
             
             function onFail(){
@@ -141,8 +145,6 @@
                                             window.localStorage.setItem("save_telefono", txtTelefono);
                                             
                                             $.mobile.changePage( "#documenti");
-                                            
-                                            showAlert("TUTTO GIUSTO! BRAVO!");
                                         }else{
                                             showAlert("Campo telefono errato!");
                                         }
@@ -174,30 +176,67 @@
                            getPhoto(pictureSource.PHOTOLIBRARY);
                            });
                            
-                           $(document).on('click', '#buttonScattaFoto', function () {
-                                          capturePhoto();
-                                          });
+            $(document).on('click', '#buttonScattaFoto', function () {
+                           capturePhoto();
+                           });
                                           
-                                          $(document).on('click', '#confermaInfoPersonali', function () {
-                                                         convalida();
-                                                         });
-                                                         
-                                                         /*$(document).on("pageinit","#documenti",function(){
-                                                          $("li").on("click",function(){
-                                                          //console.log("dentro li");
-                                                          //console.log($(this).id);
-                                                          //$(this).hide();
-                                                          
-                                                          var list = document.getElementById('listDocumenti');
-                                                          console.log("prima");
-                                                          var_dump(list.selectedIndex);
-                                                          console.log("dopo");
-                                                          
-                                                          });
-                                                          });*/
-            function cicicoco(id)
-            {
-                console.log(id);
+			$(document).on('click', '#confermaInfoPersonali', function () {
+							 convalida();
+							 });
+                             
+            //azzerro la lista e il contatore delle immagini
+            $(document).on('pagebeforeshow', '#caricaDocumenti', function(){
+                           console.log("dentro on pageload di caricaDocumenti");
+                           contatoreListaImmagini = 0;
+                           console.log(contatoreListaImmagini);
+                           $("#listSingoloDocumento").empty();
+                           
+                           /*
+                           if (arrayAssociativoDocumenti[tipoDocumentoSelezionato] == 0){
+                                console.log("dentro if");
+                           
+                           
+                                $("#listSingoloDocumento").append('<li>'  +
+                                                             '<img style=display:"block"; width:256px;height:256px; id=imageLista'+contatoreListaImmagini+' src="" />' +
+                                                             '</li>');
+                                $("#listSingoloDocumento").listview("refresh");
+                           }
+                           var image = document.getElementById('imageLista'+contatoreListaImmagini);
+                           console.log('imageLista'+contatoreListaImmagini);
+                           image.src = "icon.png";
+                            */
+                        });
+                             
+                             
+                             
+            function tipoDocumento(documento){
+                tipoDocumentoSelezionato = documento;
+                console.log(tipoDocumentoSelezionato);
+                console.log(arrayAssociativoDocumenti[documento]);
+                
+                $.mobile.changePage("#caricaDocumenti");
+                
+                /*
+                console.log("dopo change page");
+                if (arrayAssociativoDocumenti[documento] == 0){
+                    console.log("dentro if");
+                    //$("#content").append("<ul id='list' data-role='listview' data-inset='true'></ul>");
+                    //$("#content").trigger("create");
+                    $("#listSingoloDocumento").append("<li>Item</li>");
+                    $("#listSingoloDocumento").listview("refresh");
+                }
+                */
+                
+                /*
+                //Create the listview if not created
+                if(!listaCreata){
+                    $("#content").append("<ul id='list' data-role='listview' data-inset='true'></ul>");
+                    listCreated = true;
+                    $("#content").trigger("create");
+                }
+                $("#list").append("<li>Item</li>");
+                $("#list").listview("refresh");
+                */
             }
             </script>
             
@@ -265,9 +304,9 @@
         <div data-role="content">
             
             <ul data-role="listview" data-inset="true" id="listDocumenti">
-                <li id="cartaIdentita" onclick="cicicoco('cartaIdentita');"><a href="#identificativo_pagina2">Carta d'identit&agrave;<img src="../_assets/img/logo.png" class="ui-li-icon"></a></li>
-                <li id="ultimaBustaPaga" onclick="cicicoco('ultimaBustaPaga');"><a href="#">Ultima busta paga<img src="../_assets/img/logo.png" class="ui-li-icon"></a></li>
-                <li id="penultimaBustaPaga" onclick="cicicoco('penultimaBustaPaga');"><a href="#">Penultima busta paga<img src="../_assets/img/logo.png" class="ui-li-icon"></a></li>
+                <li id="cartaIdentita" onclick="tipoDocumento('cartaIdentita');"><a href="#">Carta d'identit&agrave;<img src="../_assets/img/logo.png" class="ui-li-icon"></a></li>
+                <li id="ultimaBustaPaga" onclick="tipoDocumento('ultimaBustaPaga');"><a href="#">Ultima busta paga<img src="../_assets/img/logo.png" class="ui-li-icon"></a></li>
+                <li id="penultimaBustaPaga" onclick="tipoDocumento('penultimaBustaPaga');"><a href="#">Penultima busta paga<img src="../_assets/img/logo.png" class="ui-li-icon"></a></li>
             </ul>
             
             <a href="#" data-role="button" data-theme="b" id="inviaDati">INVIA DATI</a>
@@ -275,10 +314,10 @@
     
     </div><!-- /page -->
 
-        <div data-role="page" id="identificativo_pagina2">
+        <div data-role="page" id="caricaDocumenti">
             
             <div data-role="header">
-                <h1>Mia App Phonegap</h1>
+                <h1>Carica documenti</h1>
                  <a href="index.html" data-rel="back">back</a>
             </div><!-- /header -->
             
@@ -286,6 +325,10 @@
                 <a href="#" data-role="button" data-theme="b" id="buttonScattaFoto">Scatta foto</a>
                 <a href="#" data-role="button" data-theme="b" id="buttonFoto">Scegli foto</a>
                 <img style="display:none; width:256px;height:256px;" id="largeImage" src="" />
+                
+                <ul data-role="listview" data-inset="true" id="listSingoloDocumento">
+                    
+                </ul>
             </div><!-- /content -->
             
         </div><!-- /page -->
