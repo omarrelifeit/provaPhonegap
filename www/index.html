@@ -47,9 +47,7 @@
             // Called when a photo is successfully retrieved
             //
             function onPhotoDataSuccess(imageData) {
-                // Uncomment to view the base64-encoded image data
-                console.log("dentro onPhotoDataSuccess");
-                //console.log(imageData);
+                //console.log("dentro onPhotoDataSuccess");
                 
                 $("#listSingoloDocumento").append('<li>'  +
                                                   '<img style=display:"block"; width:256px;height:256px; id=imageLista'+contatoreListaImmagini+' src="" />' +
@@ -58,9 +56,20 @@
                                                   
                 var image = document.getElementById('imageLista'+contatoreListaImmagini);
                 image.src = "data:image/jpeg;base64," + imageData;
+                
+                //incremento il contatore generale della lista delle immagini..
                 contatoreListaImmagini++;
+                //..e aggiorno il numero di immagini caricate per quel tipo di documento
                 arrayAssociativoDocumenti[tipoDocumentoSelezionato]=contatoreListaImmagini;
-                var_dump (arrayAssociativoDocumenti);
+                
+                //costruisco la chiave da associare all'immagine nel seguente modo:[CODICE FISCALE]_[TIPO DOCUMENTO]_[NUMERO].jpg
+                var cfFile = window.localStorage.getItem("save_cf");
+                var nomeFile = ''+cfFile+'_'+tipoDocumentoSelezionato+'_'+contatoreListaImmagini;
+                
+                //salvo l'immagine anche sul dispositivo (NON NELLA GALLERIA)
+                window.localStorage.setItem(nomeFile, image.src);
+                
+                //var_dump (arrayAssociativoDocumenti);
                 
             }
             
@@ -186,7 +195,7 @@
                              
             //azzerro la lista e il contatore delle immagini
             $(document).on('pagebeforeshow', '#caricaDocumenti', function(){
-                           console.log("dentro on pageload di caricaDocumenti");
+                           //console.log("dentro on pageload di caricaDocumenti");
                            contatoreListaImmagini = 0;
                            console.log(contatoreListaImmagini);
                            $("#listSingoloDocumento").empty();
@@ -202,27 +211,6 @@
                 
                 $.mobile.changePage("#caricaDocumenti");
                 
-                /*
-                console.log("dopo change page");
-                if (arrayAssociativoDocumenti[documento] == 0){
-                    console.log("dentro if");
-                    //$("#content").append("<ul id='list' data-role='listview' data-inset='true'></ul>");
-                    //$("#content").trigger("create");
-                    $("#listSingoloDocumento").append("<li>Item</li>");
-                    $("#listSingoloDocumento").listview("refresh");
-                }
-                */
-                
-                /*
-                //Create the listview if not created
-                if(!listaCreata){
-                    $("#content").append("<ul id='list' data-role='listview' data-inset='true'></ul>");
-                    listCreated = true;
-                    $("#content").trigger("create");
-                }
-                $("#list").append("<li>Item</li>");
-                $("#list").listview("refresh");
-                */
             }
             </script>
             

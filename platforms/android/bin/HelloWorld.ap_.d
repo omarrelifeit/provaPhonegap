@@ -26,8 +26,11 @@
 /Users/omar/Documents/provaPhonegap/platforms/android/assets/www/spec \
 /Users/omar/Documents/provaPhonegap/platforms/android/assets/www/spec.html \
 /Users/omar/Documents/provaPhonegap/platforms/android/assets/www/css/index.css \
+/Users/omar/Documents/provaPhonegap/platforms/android/assets/www/css/jquery.mobile-1.3.2.min.css \
 /Users/omar/Documents/provaPhonegap/platforms/android/assets/www/img/logo.png \
 /Users/omar/Documents/provaPhonegap/platforms/android/assets/www/js/index.js \
+/Users/omar/Documents/provaPhonegap/platforms/android/assets/www/js/jquery-2.0.3.min.js \
+/Users/omar/Documents/provaPhonegap/platforms/android/assets/www/js/jquery.mobile-1.3.2.min.js \
 /Users/omar/Documents/provaPhonegap/platforms/android/assets/www/plugins/org.apache.cordova.camera \
 /Users/omar/Documents/provaPhonegap/platforms/android/assets/www/plugins/org.apache.cordova.console \
 /Users/omar/Documents/provaPhonegap/platforms/android/assets/www/plugins/org.apache.cordova.dialogs \
