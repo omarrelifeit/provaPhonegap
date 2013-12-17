@@ -46,8 +46,8 @@
             
             // Called when a photo is successfully retrieved
             //
-            function onPhotoDataSuccess(imageData) {
-                //console.log("dentro onPhotoDataSuccess");
+            function onPhotoDataSuccess(imageURI) {
+                console.log("dentro onPhotoDataSuccess", imageURI);
                 
                 $("#listSingoloDocumento").append('<li>'  +
                                                   '<img style=display:"block"; width:256px;height:256px; id=imageLista'+contatoreListaImmagini+' src="" />' +
@@ -55,21 +55,20 @@
                 $("#listSingoloDocumento").listview("refresh");
                                                   
                 var image = document.getElementById('imageLista'+contatoreListaImmagini);
-                image.src = "data:image/jpeg;base64," + imageData;
+                image.src = imageURI;
                 
                 //incremento il contatore generale della lista delle immagini..
                 contatoreListaImmagini++;
                 //..e aggiorno il numero di immagini caricate per quel tipo di documento
                 arrayAssociativoDocumenti[tipoDocumentoSelezionato]=contatoreListaImmagini;
                 
-                //costruisco la chiave da associare all'immagine nel seguente modo:[CODICE FISCALE]_[TIPO DOCUMENTO]_[NUMERO].jpg
+                //costruisco la chiave da associare all'immagine nel seguente modo:[CODICE FISCALE]_[TIPO DOCUMENTO]_[NUMERO]  .jpg??
                 var cfFile = window.localStorage.getItem("save_cf");
                 var nomeFile = ''+cfFile+'_'+tipoDocumentoSelezionato+'_'+contatoreListaImmagini;
                 
-                //salvo l'immagine anche sul dispositivo (NON NELLA GALLERIA)
-                window.localStorage.setItem(nomeFile, image.src);
                 
-                //var_dump (arrayAssociativoDocumenti);
+                //salvo l'immagine anche sul dispositivo (NON NELLA GALLERIA)
+                window.localStorage.setItem(nomeFile, imageURI);
                 
             }
             
@@ -85,7 +84,7 @@
             
             function capturePhoto() {
                 // Take picture using device camera and retrieve image as base64-encoded string
-                navigator.camera.getPicture(onPhotoDataSuccess, onFail, { quality: 50, destinationType: destinationType.DATA_URL });
+                navigator.camera.getPicture(onPhotoDataSuccess, onFail, { quality: 50, destinationType: destinationType.FILE_URI });
             }
             
             function var_dump(obj, indentSpaces) {
@@ -195,13 +194,31 @@
                              
             //azzerro la lista e il contatore delle immagini
             $(document).on('pagebeforeshow', '#caricaDocumenti', function(){
-                           //console.log("dentro on pageload di caricaDocumenti");
                            contatoreListaImmagini = 0;
                            console.log(contatoreListaImmagini);
                            $("#listSingoloDocumento").empty();
                            
+                           var fotoCaricateDocumentoCorrente = arrayAssociativoDocumenti[tipoDocumentoSelezionato];
+                           //se ho già caricato in precedenza delle foto per quel tipo di documento le ricarico nella lista
+                           if (fotoCaricateDocumentoCorrente>0){
+                           contatoreListaImmagini = fotoCaricateDocumentoCorrente;
+                                var cfFile = window.localStorage.getItem("save_cf");
+                                for(i=0; i<fotoCaricateDocumentoCorrente; i++){
+                                    //recupero l'immagine dalla memoria
+                                    var nomeFile = ''+cfFile+'_'+tipoDocumentoSelezionato+'_'+(i+1);
+                                    var image = window.localStorage.getItem(nomeFile);
+                           
+                                    $("#listSingoloDocumento").append('<li>'  +
+                                                             '<img style=display:"block"; width:256px;height:256px; id=imageLista'+i+' src="" />' +
+                                                             '</li>');
+                                    $("#listSingoloDocumento").listview("refresh");
+                           
+                                    var imageElementoLista = document.getElementById('imageLista'+i);
+                                    imageElementoLista.src = image;
+                                }
+                           }
+                           
                         });
-                             
                              
                              
             function tipoDocumento(documento){
