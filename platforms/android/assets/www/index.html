@@ -16,17 +16,27 @@
             var tipoDocumentoSelezionato = null;
             var listaCreata = false;
             var contatoreListaImmagini = 0;
-            //credo un array associativo TIPO DOCUMENTO - NUM FOTO CARICATE
-            var arrayAssociativoDocumenti = { "cartaIdentita":"0", "ultimaBustaPaga":"0", "penultimaBustaPaga":"0" };
-                
+            
+            //creo un array associativo TIPO DOCUMENTO - NUM FOTO CARICATE
+            var arrayAssociativoDocumentiNumFoto = { "cartaIdentita":"0", "codiceFiscale":"0", "ultimaBustaPaga":"0" };
+            //creo un altro array associativo TIPO DOCUMENTO - NOME FOTO CARICATE
+            var arrayAssociativoDocumentiNomeFoto = { "cartaIdentita":[], "codiceFiscale":[], "ultimaBustaPaga":[] };
+            
+            var arrayCartaIdentita = new Array();
+            var arrayCodiceFiscale = new Array();
+            var arrayUltimaBustaPaga = new Array();
+            
             document.addEventListener("deviceready",onDeviceReady,false);
                 
             function onDeviceReady() {
                 pictureSource=navigator.camera.PictureSourceType;
                 destinationType=navigator.camera.DestinationType;
+                
+                //var_dump(arrayAssociativoDocumentiNumFoto2);
+                //console.log(arrayAssociativoDocumentiNomeFoto["cartaIdentita"].length);
             }
 
-            
+            /*
             function onPhotoURISuccess(imageURI) {
                 // Uncomment to view the image file URI
                 console.log("imageURI: ", imageURI);
@@ -42,16 +52,17 @@
                 //
                 largeImage.src = imageURI;
                 
-            }
+            }*/
             
-            // Called when a photo is successfully retrieved
+            // Chiamata quando uan foto viene scattata o presa dal rullino con successo
             //
             function onPhotoDataSuccess(imageURI) {
                 console.log("dentro onPhotoDataSuccess", imageURI);
                 
-                $("#listSingoloDocumento").append('<li>'  +
-                                                  '<img style=display:"block"; width:256px;height:256px; id=imageLista'+contatoreListaImmagini+' src="" />' +
-                                                  '</li>');
+                $("#listSingoloDocumento").append('<li id="element'+contatoreListaImmagini+'">'  +
+                                                  '<img style="display:block; width:128px; height:128px;" id="imageLista'+contatoreListaImmagini+'" src="" />'
+                                                   + '<a href="#" onclick="deleteImageFromList('+contatoreListaImmagini+','+imageURI+');return false;" data-role="button">Elimina</a>' +
+                                                   '</li>');
                 $("#listSingoloDocumento").listview("refresh");
                                                   
                 var image = document.getElementById('imageLista'+contatoreListaImmagini);
@@ -60,15 +71,61 @@
                 //incremento il contatore generale della lista delle immagini..
                 contatoreListaImmagini++;
                 //..e aggiorno il numero di immagini caricate per quel tipo di documento
-                arrayAssociativoDocumenti[tipoDocumentoSelezionato]=contatoreListaImmagini;
+                arrayAssociativoDocumentiNumFoto[tipoDocumentoSelezionato]=contatoreListaImmagini;
+                arrayAssociativoDocumentiNomeFoto[tipoDocumentoSelezionato].push(imageURI);
                 
+                console.log("----VAR ASSOCATIVO:----");
+                var_dump(arrayAssociativoDocumentiNomeFoto[tipoDocumentoSelezionato]);
+                console.log("----local storage PRIMA:----");
+                //var_dump(window.localStorage);
+                
+                window.localStorage.setItem(tipoDocumentoSelezionato, arrayAssociativoDocumentiNomeFoto[tipoDocumentoSelezionato]);
+                var_dump(window.localStorage);
+                /*
+                window.localStorage.removeItem(nomeFile);
+                console.log("----local storage MEZZO:----");
+                var_dump(window.localStorage);
+                window.localStorage.setItem(tipoDocumentoSelezionato, arrayAssociativoDocumentiNomeFoto[tipoDocumentoSelezionato]);
+                console.log("----local storage DOPO:----");
+                var_dump(window.localStorage);
+                */
+                /*
                 //costruisco la chiave da associare all'immagine nel seguente modo:[CODICE FISCALE]_[TIPO DOCUMENTO]_[NUMERO]  .jpg??
                 var cfFile = window.localStorage.getItem("save_cf");
                 var nomeFile = ''+cfFile+'_'+tipoDocumentoSelezionato+'_'+contatoreListaImmagini;
-                
+                */
                 
                 //salvo l'immagine anche sul dispositivo (NON NELLA GALLERIA)
-                window.localStorage.setItem(nomeFile, imageURI);
+                //window.localStorage.setItem(nomeFile, imageURI);
+                //console.log("----local storage:----");
+                //var_dump(window.localStorage);
+            }
+            
+            function deleteImageFromList(idImage, imageURI){
+                //ritrovo l'immagine da eliminare e la elimino dal dispositivo
+                console.log("dentro deleteImage: ", idImage);
+                
+                
+                
+                
+                
+                // --> eliminare l'elemento del vettore arrayAssociativoDocumentiNomeFoto[tipoDocumentoSelezionato] cercandolo attraverso il valore imageURI
+                
+                
+                
+                /*
+                var cfFile = window.localStorage.getItem("save_cf");
+                var nomeFile = ''+cfFile+'_'+tipoDocumentoSelezionato+'_'+idImage;
+                
+                window.localStorage.removeItem(nomeFile);
+                */
+                
+                $("#element"+idImage).remove();
+            
+                //decremento il contatore generale delle immagini
+                //contatoreListaImmagini--;
+                //..e aggiorno il numero di immagini caricate per quel tipo di documento
+                arrayAssociativoDocumentiNumFoto[tipoDocumentoSelezionato]=contatoreListaImmagini;
                 
             }
             
@@ -79,7 +136,7 @@
             function getPhoto(source) {
                 // Retrieve image file location from specified source
                 
-                navigator.camera.getPicture(onPhotoURISuccess, onFail, { quality: 50, destinationType: destinationType.FILE_URI, sourceType: source });
+                navigator.camera.getPicture(onPhotoDataSuccess, onFail, { quality: 50, destinationType: destinationType.FILE_URI, sourceType: source });
             }
             
             function capturePhoto() {
@@ -191,14 +248,14 @@
 			$(document).on('click', '#confermaInfoPersonali', function () {
 							 convalida();
 							 });
-                             
+             
             //azzerro la lista e il contatore delle immagini
             $(document).on('pagebeforeshow', '#caricaDocumenti', function(){
                            contatoreListaImmagini = 0;
                            console.log(contatoreListaImmagini);
                            $("#listSingoloDocumento").empty();
                            
-                           var fotoCaricateDocumentoCorrente = arrayAssociativoDocumenti[tipoDocumentoSelezionato];
+                           var fotoCaricateDocumentoCorrente = arrayAssociativoDocumentiNumFoto[tipoDocumentoSelezionato];
                            //se ho già caricato in precedenza delle foto per quel tipo di documento le ricarico nella lista
                            if (fotoCaricateDocumentoCorrente>0){
                            contatoreListaImmagini = fotoCaricateDocumentoCorrente;
@@ -208,8 +265,9 @@
                                     var nomeFile = ''+cfFile+'_'+tipoDocumentoSelezionato+'_'+(i+1);
                                     var image = window.localStorage.getItem(nomeFile);
                            
-                                    $("#listSingoloDocumento").append('<li>'  +
-                                                             '<img style=display:"block"; width:256px;height:256px; id=imageLista'+i+' src="" />' +
+                                    $("#listSingoloDocumento").append('<li id="element'+i+'">'  +
+                                                             '<img style="display:block; width:128px; height:128px;" id="imageLista'+i+'" src="" />'
+                                                             + '<a href="#" onclick="deleteImageFromList('+i+');return false;" data-role="button">Elimina</a>' +
                                                              '</li>');
                                     $("#listSingoloDocumento").listview("refresh");
                            
@@ -219,12 +277,12 @@
                            }
                            
                         });
-                             
-                             
+                        
+                           
             function tipoDocumento(documento){
                 tipoDocumentoSelezionato = documento;
                 console.log(tipoDocumentoSelezionato);
-                console.log(arrayAssociativoDocumenti[documento]);
+                console.log(arrayAssociativoDocumentiNumFoto[documento]);
                 
                 $.mobile.changePage("#caricaDocumenti");
                 
@@ -296,8 +354,8 @@
             
             <ul data-role="listview" data-inset="true" id="listDocumenti">
                 <li id="cartaIdentita" onclick="tipoDocumento('cartaIdentita');"><a href="#">Carta d'identit&agrave;<img src="../_assets/img/logo.png" class="ui-li-icon"></a></li>
-                <li id="ultimaBustaPaga" onclick="tipoDocumento('ultimaBustaPaga');"><a href="#">Ultima busta paga<img src="../_assets/img/logo.png" class="ui-li-icon"></a></li>
-                <li id="penultimaBustaPaga" onclick="tipoDocumento('penultimaBustaPaga');"><a href="#">Penultima busta paga<img src="../_assets/img/logo.png" class="ui-li-icon"></a></li>
+                <li id="codiceFiscale" onclick="tipoDocumento('codiceFiscale');"><a href="#">Codice fiscale<img src="../_assets/img/logo.png" class="ui-li-icon"></a></li>
+                <li id="ultimaBustaPaga" onclick="tipoDocumento('ultimaBustaPaga');"><a href="#">Ultima busta paga/cedolino pensione<img src="../_assets/img/logo.png" class="ui-li-icon"></a></li>
             </ul>
             
             <a href="#" data-role="button" data-theme="b" id="inviaDati">INVIA DATI</a>
